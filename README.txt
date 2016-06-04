@@ -12,7 +12,7 @@ Installation Steps:
        using the sites functionality, add menus and items etc.
 
 Execution/Usage Instructions:
-    To start server, navigate to the toolshare directory and run the command:
+    To start server, navigate to the foodPortal directory and run the command:
     "python manage.py runserver"
 
     The admin user can be used to access the admin panel and view database
