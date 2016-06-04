@@ -1,43 +1,17 @@
-
 #!/bin/bash
-
-# gentags v0.2 -- generate tags using ctags for all subfolders
-#
-# Written by Hean Kuan Ong ( mysurface@gmail.com)
-# April 24, 2008
-#
-# Copyright (C) 2008 Hean Kuan Ong All rights reserved.
-#
-# This program is free software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-
-# IGNORE contains the directories to ignore in find statement
-# for more info, man find.
 IGNORE=" ! -wholename *.svn* ! -wholename *.git* ! -wholename .*log* ! -wholename .*Log* ! -wholename static"
 
 PWD=`pwd`
 
-helpme()
+help()
 {
-    echo "gentags v0.1"
-    echo "USAGE: gentags [OPTION]"
+    echo "djangoTags"
+    echo "USAGE: djangoTags"
     echo ""
     echo "OPTION:"
-    echo " --help   display me"
-    echo " --info   simple steps for vim user"
+    echo " --help   display help"
     echo " --test   shows the list of target tags directories"
-    echo " --init   generate tags to all subfolders besides .svn and .git"
+    echo " --init   generate tags to all subfolders besides ignored oens set in script"
     echo " --ask    ask for confirmation for tags generation"
     echo " --clean  clean all the tags files"
     echo " --show   locate all the tags files"
@@ -67,19 +41,16 @@ info()
 if [[ $1 = "--help" || $1 = "-h" ]]
 then
     helpme
-elif [[ $1 = "--info" ]]
-then
-    info
 elif [[ $1 = "--test" ]]
 then
     find . -type d $IGNORE
 elif [[ $1 = "--init" ]]
 then
-    ctags --file-scope=no -R
+    ctags -R --file-scope=no --fields=+l --languages=python --python-kinds=-iv -f ./tags $(python3 -c "import os, sys; print(' '.join('{}'.format(d) for d in sys.path if os.path.isdir(d)))") 
     find . -type d $IGNORE -exec `basename $0` {} \;
 elif [[ $1 = "--ask" ]]
 then
-    ctags --file-scope=no -R
+    ctags -R --file-scope=no --fields=+l --languages=python --python-kinds=-iv -f ./tags $(python3 -c "import os, sys; print(' '.join('{}'.format(d) for d in sys.path if os.path.isdir(d)))") 
     find . -type d $IGNORE -exec `basename $0` --ask2 {} \;
 elif [[ $1 = "--ask2" ]]
 then
