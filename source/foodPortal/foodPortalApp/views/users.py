@@ -9,7 +9,7 @@ from django.db.models import Q
 from ..forms import *
 from ..models import *
 from django.contrib.auth.decorators import login_required
-from django.forms.util import ErrorList
+from django import forms
 
 def index(request):
     """
@@ -35,7 +35,7 @@ def index(request):
     
         # Check for unique email
         if Member.objects.filter(email=form.data['email']).exists():
-            error = form._errors.setdefault('email', ErrorList())
+            error = form._errors.setdefault('email', forms.ErrorList())
             error.append("Email is already registered.")
             return render(request, "index.html", locals())
 
@@ -43,16 +43,16 @@ def index(request):
             int(form.data['phoneNumber'])
             # Negative Phone Number???
             if (int(form.data['phoneNumber']) < 0):
-                error = form._errors.setdefault('phoneNumber', ErrorList())
+                error = form._errors.setdefault('phoneNumber', forms.ErrorList())
                 error.append("phoneNumber cannot be negative.")
                 return render(request, "index.html", locals())
             # Less Than 10 Digits Phone Number???
             if (len(form.data['phoneNumber']) != 10):
-                error = form._errors.setdefault('phoneNumber', ErrorList())
+                error = form._errors.setdefault('phoneNumber', forms.ErrorList())
                 error.append("Phone Number should be 10 digits long.")
                 return render(request, "index.html", locals())
         except ValueError:
-            error = form._errors.setdefault('phoneNumber', ErrorList())
+            error = form._errors.setdefault('phoneNumber', forms.ErrorList())
             error.append("Phone Number can only contain numbers.")
             return render(request, "index.html", locals())
 
