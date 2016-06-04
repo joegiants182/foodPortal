@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+{% block title %}Open Order{% endblock %}
+{% block body %}
+<ul class="row list-group">
+	{% include "menus/listing.html" with menu=menu %}
+</ul>
+<ul class="row list-group">
+    {%include "messages.html" with messages=messages %}
+</ul>
+<div class="row">
+    <ul class="row list-group">
+        {% for orderItem in orderItems.all %}
+            <div class="panel">
+                <div class="section-header">
+                    <div class="col-md-6">
+                        <h3 class="right-align section-text no-margin-tb">{{ orderItem.item.name }}</h3>
+                    </div>
+                    <div class="col-md-6">
+                        <h3 class="left-align section-text no-margin-tb">{{ orderItem.option.name }}</h3>
+                    </div>
+                </div>1
+                <div class="panel-body">
+                    <ul class="list-group">
+                        {% for item in items %}
+                            {% if item.section.id == section.id %}
+                                {% include "menus/../items/itemListing.html" with item=item %}
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
+
+
+{% if order.customer.id == currUser.id or menu.curator.id == currUser.id or currUser.is_superuser %}
+
+{% endif %}

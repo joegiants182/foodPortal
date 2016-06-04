@@ -1,0 +1,70 @@
+{% extends "layout.html" %}
+{% block title %}Menu{% endblock %}
+{% block body %}
+<ul class="row list-group">
+	{% include "menus/listing.html" with menu=menu %}
+</ul>
+<ul class="row list-group">
+    {%include "messages.html" with messages=messages %}
+</ul>
+{% if menu.curator.id == currUser.id or currUser.is_superuser %}
+<div class="row even-padding center-inline">
+    <div class="col-md-3">
+        <form class="menu-action" action="/menus/addSection/{{ id }}/" method="POST">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-default"><i class="fa fa-plus"></i> Add Section</button>
+        </form>
+    </div>
+    <div class="col-md-3">
+        <form class="menu-action" action="/items/addOption/{{ id }}/" method="POST">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-default"><i class="fa fa-plus"></i> Add Option</button>
+        </form>
+    </div>
+    <div class="col-md-3">
+        <form class="menu-action" action="/items/editOptions/{{ id }}/" method="POST">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary">Edit Options</button>
+        </form>
+    </div>
+    <div class="col-md-3">
+        <form class="menu-action" action="/items/addItem/{{ id }}/" method="POST">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-default"><i class="fa fa-plus"></i> Add Menu Item</button>
+        </form>
+    </div>
+</div>
+{% endif %}
+<div class="row">
+    <ul class="row list-group">
+        {% for section in sections %}
+            <div class="panel">
+                <div class="section-header">
+                    {% if currUser.id == menu.curator.id or currUser.is_superuser %}
+                    <div class="col-md-6">
+                    {% endif %}
+                    <h3 class="{% if currUser.id == menu.curator.id or currUser.is_superuser %}right-align{% else %}center-inline{% endif %} section-text no-margin-tb">{{ section.name }}</h3>
+                    {% if currUser.id == menu.curator.id or currUser.is_superuser %}
+                    </div>
+                        <div class="col-md-6">
+                            <form class="menu-action" action="/menus/editSection/{{ section.id }}/" method="POST">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-primary">Edit Section</button>
+                            </form>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="panel-body">
+                    <ul class="list-group">
+                        {% for item in items %}
+                            {% if item.section.id == section.id %}
+                                {% include "menus/../items/itemListing.html" with item=item %}
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
