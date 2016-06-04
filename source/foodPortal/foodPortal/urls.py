@@ -21,7 +21,7 @@ from foodPortalApp.views import menus
 from foodPortalApp.views import items
 from foodPortalApp.views import orders
 
-urlpatterns = patterns('',
+urlpatterns = [ 
     # Examples:
     # url(r'^$', 'foodPortal.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
@@ -49,4 +49,4 @@ urlpatterns = patterns('',
     url(r'^orders/view/', orders.view),
     url(r'^orders/update/(?P<id>\d+)/', orders.update),
     url(r'^orders/removeItem/(?P<id>\d+)/', orders.removeItem),
-                       )
+    ]
