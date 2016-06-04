@@ -9,11 +9,11 @@ help()
     echo "USAGE: djangoTags"
     echo ""
     echo "OPTION:"
-    echo " --help   display help"
-    echo " --test   shows the list of target tags directories"
-    echo " --init   generate tags to all subfolders besides ignored oens set in script"
-    echo " --clean  clean all the tags files"
-    echo " --show   locate all the tags files"
+    echo " help   display help"
+    echo " test   shows the list of target tags directories"
+    echo " init   generate tags to all subfolders besides ignored oens set in script"
+    echo " clean  clean all the tags files"
+    echo " show   locate all the tags files"
     echo ""
     exit 2
 }
@@ -28,19 +28,19 @@ info()
     echo ""
 }
 
-if [[ $1 = "--help" || $1 = "-h" ]]
+if [[ $1 = "help" || $1 = "-h" ]]
 then
-    helpme
-elif [[ $1 = "--test" ]]
+    help
+elif [[ $1 = "test" ]]
 then
     find $PWD -type d $IGNORE
-elif [[ $1 = "--init" ]]
+elif [[ $1 = "init" ]]
 then
     ctags -R --fields=+l --languages=python --python-kinds=-iv -f ./tags $(python3 -c "import os, sys; print(' '.join('{}'.format(d) for d in sys.path if os.path.isdir(d)))") 
-elif [[ $1 = "--clean" ]]
+elif [[ $1 = "clean" ]]
 then
     find $PWD -name "tags" -exec rm {} \;
-elif [[ $1 = "--show" ]]
+elif [[ $1 = "show" ]]
 then
     find $PWD -name "tags"
 else
