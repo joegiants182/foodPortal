@@ -76,10 +76,7 @@ def update(request, id):
     currUser = Member.objects.get(id=request.user.id)
     if request.POST['action'].split('-')[0] == 'curator':
         menu = Menu.objects.get(id=id)
-        if request.POST['action'].split('-')[1] == 'Placed':
-            orders = Order.objects.filter(menu_id=id).filter(status='Paid For')
-        else:
-            orders = Order.objects.filter(menu_id=id).filter(status='On The Way')
+        orders = Order.objects.all()
         if currUser.id != menu.curator.id:
             valid = False
     else:
@@ -130,7 +127,10 @@ def update(request, id):
                 if order.status == 'Paid For':
                     order.status = 'On The Way'
                     order.save()
-            messages.success(request, "Orders marked On The Way for " + menu.restaurant + ".")
+                elif order.status == 'Placed':
+                    order.status = 'Open'
+                    order.save()
+            messages.success(request, "Orders marked On The Way for " + menu.restaurant + ". Any placed but not paid for orders were marked open.")
         elif request.POST['action'] == 'curator-Kitchen':
             for order in orders:
                 if order.status == 'On The Way':
