@@ -1,0 +1,70 @@
+<li class="list-group-item order-list-group-item order-listing clearfix order-actions">
+    {% if not hide %}
+        <h4 class="list-group-item-heading"><a href="/orders/{{order.id}}/">{{order.customer.get_full_name}}'s</a> Order
+        <br>From {{ order.menu.restaurant }}</h4>
+    {% endif %}
+    <p class="list-group-item-text">
+        <strong>Created: {{ order.dateCreated }} at {{ order.timeCreated }}</strong>
+        <br><strong>Status: {{ order.status }}</strong>
+    </p>
+    
+    <p class="list-group-item-text">
+        <strong>Number of Items: {{ order.orderItems.all | length }}</strong>
+        <br><strong>Total: ${{ order.total }}</strong>
+    </p>
+    {% if order.customer.id == currUser.id %}
+        {% if order.status == 'Open' %}
+            <div class="col-md-3"></div>
+            <div class="col-md-3">
+                <form class="order-action center-inline" action="/orders/update/{{ order.id }}/" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="place">
+                    <button type="submit" class="btn btn-primary">Place</button>
+                </form>
+            </div>
+            <div class="col-md-3">
+                <form class="center-inline order-action" action="/orders/update/{{ order.id }}/" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i> Close</button>
+                    <input type="hidden" name="action" value="close">
+                </form>
+            </div>
+            <div class="col-md-3"></div>
+        {% elif order.status == 'Placed' %}
+            <div class="col-md-3"></div>
+            {% if currUser.id == order.menu.curator.id %}
+                <div class="col-md-3">
+                    <form class="center-inline order-action" action="/orders/update/{{ order.id }}/" method="POST">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success">Mark Paid</button>
+                        <input type="hidden" name="action" value="pay">
+                    </form>
+                </div>
+            {% endif %}
+            <div class="col-md-3">
+                <form class="center-inline order-action" action="/orders/update/{{ order.id }}/" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i> Close</button>
+                    <input type="hidden" name="action" value="close">
+                </form>
+            </div>
+            <div class="col-md-3"></div>
+        {% elif order.status == 'In The Kitchen' %}
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+                <form class="center-inline order-action" action="/orders/update/{{ order.id }}/" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i> Close</button>
+                    <input type="hidden" name="action" value="close">
+                </form>
+            </div>
+            <div class="col-md-4"></div>
+        {% elif order.status == 'Closed' or order.status %}
+            <form class="order-action" action="/orders/update/{{ order.id }}/" method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-success">Re-Open</button>
+                <input type="hidden" name="action" value="open">
+            </form>
+        {% endif %}
+    {% endif %}
+</li>
